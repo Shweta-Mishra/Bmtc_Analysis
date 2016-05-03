@@ -1,0 +1,23 @@
+Using arules package and apriori algorithm
+
+gave following command:
+> datasub<-assoc_data[,c("route_no","busstop","Service_Class")]
+> rules<-apriori(datasub)
+> inspect(rules)
+  lhs    rhs                    support   confidence lift
+1 {}  => {Service_Class=Non-AC} 0.8281517 0.8281517  1                #Got only one rule
+
+#on decreasing the support count
+> rules <- apriori(datasub, control = list(verbose=T), parameter = list(supp=0.004,conf=0.6))
+> inspect(rules)
+  lhs                                                                            rhs                        support confidence      lift
+1 {}                                                                          => {Service_Class=Non-AC} 0.828151735  0.8281517 1.0000000
+2 {busstop=Mayohall}                                                          => {Service_Class=Non-AC} 0.004083939  0.8694158 1.0498267
+3 {busstop=Corporation}                                                       => {Service_Class=Non-AC} 0.004067797  0.8456376 1.0211143
+4 {busstop=Maharani College,BESIDE SJP COLLEGE}                               => {Service_Class=Non-AC} 0.004116223  0.8279221 0.9997227
+5 {busstop=Richmond Circle}                                                   => {Service_Class=Non-AC} 0.004326069  0.8729642 1.0541114
+6 {busstop=Krishnarajendra Market,KR MARKET,OPPOSITE TO CHANDRA BHAVAN HOTEL} => {Service_Class=Non-AC} 0.004665052  0.8784195 1.0606987
+7 {busstop=Krishnarajendra Market}                                            => {Service_Class=Non-AC} 0.004568200  0.8179191 0.9876440
+8 {busstop=Town Hall}                                                         => {Service_Class=Non-AC} 0.006553672  0.8388430 1.0129098
+9 {busstop=Kempegowda Bus Station}                                            => {Service_Class=Non-AC} 0.007748184  0.8602151 1.0387167
+#got these 9 not so intresting rules 

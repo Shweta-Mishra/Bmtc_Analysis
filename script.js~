@@ -1,0 +1,41 @@
+var map = L.map('leaflet', {
+  'center': [0, 0],
+  'zoom': 0,
+  'layers': [
+    L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      'attribution': 'Map data &copy; OpenStreetMap contributors'
+    })
+  ]
+});
+
+
+allText=""
+var allTextLines = allText.split(/\r\n|\n/);
+ var headers = allTextLines[0].split(',');
+    var lines = [];
+
+    for (var i=1; i<allTextLines.length; i++) {
+        var data = allTextLines[i].split(',');
+        if (data.length == headers.length) {
+
+            var tarr = [];
+            for (var j=0; j<headers.length; j++) {
+                //tarr.push(headers[j]+":"+data[j]);
+		var polyline = new L.Polyline([
+  [data[++j], data[++j]],
+  [data[++j], data[++j]]
+], {
+  color: 'green',
+  weight: 5,
+  opacity: 0.5
+}).addTo(map);
+map.fitBounds(polyline.getBounds());
+            }
+            //lines.push(tarr);
+        }
+    }
+
+
+
+
+

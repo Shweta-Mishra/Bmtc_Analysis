@@ -1,0 +1,46 @@
+
+select s.route_no, s.busstop as src,(select d.busstop from bus_route as d where d.route_no=s.route_no and d.serial=s.serial+1) as dest from bus_route as s
+
+
+# to create view from routes table
+Create View routes_origin_count as select origin as bus_stop,count(origin) as bus_count from routes group by origin order by count(origin) DESC;
+
+# to crosscheck data of routes_origin_count view
+select distinct(route_no) from routes where origin='Krishnarajendra Market';
+
+#to get routes_origin_count - origin_count
+select distinct(route_no) from routes where origin='Krishnarajendra Market'  and route_no not in( select distinct(route_no) from bus_route where busstop='Krishnarajendra Market' and serial='1');
+select distinct(route_no) from routes where origin='Krishnarajendra Market'  and route_no not in( select distinct(route_no) from bus_route where (busstop='Krishnarajendra Market' or busstop='Krishnarajendra Market,KR MARKET,OPPOSITE TO CHANDRA BHAVAN HOTEL' or busstop='Krishnarajendra Market,KR MARKET') and serial='1');
+
+#to get routes-busstop
+select distinct(busstop) from bus_route where busstop not in (select distinct(name) from busstop)
+
+#to get total trips count for a bus
+select  route_no,count(up) as trip from timings where up=1 group by route_no
+
+#to get counts of stop on a route
+SELECT route_no, max(serial_no) as bus_stop_count FROM BusRoutes group by route_no
+
+#countdepotfromschedule is created by this query
+select Schedule_Number, Count(Depot_Code) from DepotMapping  group by Schedule_Number 
+
+Added a col count to depotmapping then perform a join on depot mapping and countfromdepotschedule
+
+# conversion to multivalued attribute in excel is done from this site
+http://www.exceltactics.com/combine-data-multiple-rows-one-cell/
+
+#to get the time between every stop assuming all the stops are equidistant
+SELECT route_no,min/(BusStopCount-1) FROM StopCountForRoute
+
+#to get start time of every bus.. from multiple start time it chooses only the first start time
+update PerStopTime set start_time=(select start from timings where PerStopTime.route_no=timings.route_no)
+
+#for busy index
+SELECT t1.busstop as src,t2.busstop as dest,count(t1.route_no) as Routes,Sum(t1.Trips) as Freq  FROM BusRoutes  t1,BusRoutes t2 where t1.busstop<> t2.busstop  and t1.route_no=t2.route_no  group by t1.route_no
+SELECT t1.busstop,t2.busstop,count(t1.route_no),sum(t1.trips) from BusRoutes t1,BusRoutes t2 where t1.busstop<>t2.busstop and t1.route_no=t2.route_no group by t1.route_no,t2.route_no
+
+#to get all the routes from src to dest stop
+SELECT t1.route_no,t1.busstop as src,t2.busstop as dest FROM BusRoutes t1,BusRoutes t2 where t1.route_no=t2.route_no and t1.busstop<>t2.busstop and t1.lat  NOT LIKE "NULL"  and t2.lat NOT LIKE "NULL" order by src,dest
+
+#to get a multivalued column from single valued of route numbers between every two stops
+select src,dest,group_concat(route, ',') as route_nos from RoutesBusy group by src,dest

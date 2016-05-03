@@ -1,0 +1,1 @@
+TotalTripPerStop is a csv having the individual busstop and the sum of trips of all the busstops passing from that stop.Constructedd using the SumTripPerStop csv.

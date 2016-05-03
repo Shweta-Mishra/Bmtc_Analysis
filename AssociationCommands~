@@ -1,0 +1,379 @@
+Using arules package and apriori algorithm
+
+gave following command:
+> datasub<-assoc_data[,c("route_no","busstop","Service_Class")]
+> rules<-apriori(datasub)
+> inspect(rules)
+  lhs    rhs                    support   confidence lift
+1 {}  => {Service_Class=Non-AC} 0.8281517 0.8281517  1                #Got only one rule
+
+#on decreasing the support count
+> rules <- apriori(datasub, control = list(verbose=T), parameter = list(supp=0.004,conf=0.6))
+> inspect(rules)
+  lhs                                                                            rhs                        support confidence      lift
+1 {}                                                                          => {Service_Class=Non-AC} 0.828151735  0.8281517 1.0000000
+2 {busstop=Mayohall}                                                          => {Service_Class=Non-AC} 0.004083939  0.8694158 1.0498267
+3 {busstop=Corporation}                                                       => {Service_Class=Non-AC} 0.004067797  0.8456376 1.0211143
+4 {busstop=Maharani College,BESIDE SJP COLLEGE}                               => {Service_Class=Non-AC} 0.004116223  0.8279221 0.9997227
+5 {busstop=Richmond Circle}                                                   => {Service_Class=Non-AC} 0.004326069  0.8729642 1.0541114
+6 {busstop=Krishnarajendra Market,KR MARKET,OPPOSITE TO CHANDRA BHAVAN HOTEL} => {Service_Class=Non-AC} 0.004665052  0.8784195 1.0606987
+7 {busstop=Krishnarajendra Market}                                            => {Service_Class=Non-AC} 0.004568200  0.8179191 0.9876440
+8 {busstop=Town Hall}                                                         => {Service_Class=Non-AC} 0.006553672  0.8388430 1.0129098
+9 {busstop=Kempegowda Bus Station}                                            => {Service_Class=Non-AC} 0.007748184  0.8602151 1.0387167
+#got these 9 not so intresting rules 
+Out of some 2000 routes we have only 4 routes with ac service so all the above rules are obvious.
+
+
+
+After including route length in the set: using as.factor(routelength)
+inspect(rules_desc)
+   lhs                                                                            rhs                        support confidence      lift
+1  {Route_lenght=37.2 KM}                                                      => {Service_Class=Non-AC} 0.004148507  1.0000000 1.2075082
+2  {Route_lenght=30.5 KM}                                                      => {Service_Class=Non-AC} 0.004229217  1.0000000 1.2075082
+3  {Route_lenght=18.8 KM}                                                      => {Service_Class=Non-AC} 0.004616626  1.0000000 1.2075082
+4  {Route_lenght=29.2 KM}                                                      => {Service_Class=Non-AC} 0.005230024  1.0000000 1.2075082
+5  {Route_lenght=14.5 KM}                                                      => {Service_Class=Non-AC} 0.005633575  1.0000000 1.2075082
+6  {Route_lenght=28.5 KM}                                                      => {Service_Class=Non-AC} 0.006263115  1.0000000 1.2075082
+7  {Route_lenght=76 KM}                                                        => {Service_Class=Non-AC} 0.006408394  1.0000000 1.2075082
+8  {Route_lenght=33.5 KM}                                                      => {Service_Class=Non-AC} 0.006682809  1.0000000 1.2075082
+9  {Route_lenght=37.5 KM}                                                      => {Service_Class=Non-AC} 0.007005650  1.0000000 1.2075082
+10 {Route_lenght=26 KM}                                                        => {Service_Class=Non-AC} 0.007280065  1.0000000 1.2075082
+11 {Route_lenght=}                                                             => {Service_Class=Non-AC} 0.008038741  1.0000000 1.2075082
+12 {Route_lenght=36 KM}                                                        => {Service_Class=Non-AC} 0.004987893  0.9747634 1.1770348
+13 {Route_lenght=20.5 KM}                                                      => {Service_Class=Non-AC} 0.006101695  0.9402985 1.1354181
+14 {Route_lenght=22.5 KM}                                                      => {Service_Class=Non-AC} 0.007328491  0.9360825 1.1303273
+15 {Route_lenght=18 KM}                                                        => {Service_Class=Non-AC} 0.007457627  0.9221557 1.1135105
+16 {Route_lenght=38 KM}                                                        => {Service_Class=Non-AC} 0.007909605  0.9158879 1.1059421
+17 {Route_lenght=30 KM}                                                        => {Service_Class=Non-AC} 0.005020178  0.8911175 1.0760317
+18 {Route_lenght=23.5 KM}                                                      => {Service_Class=Non-AC} 0.004164649  0.8805461 1.0632666
+19 {busstop=Krishnarajendra Market,KR MARKET,OPPOSITE TO CHANDRA BHAVAN HOTEL} => {Service_Class=Non-AC} 0.004665052  0.8784195 1.0606987
+20 {Route_lenght=30.2 KM}                                                      => {Service_Class=Non-AC} 0.005391445  0.8766404 1.0585505
+21 {Route_lenght=18.9 KM}                                                      => {Service_Class=Non-AC} 0.004955609  0.8746439 1.0561396
+22 {busstop=Richmond Circle}                                                   => {Service_Class=Non-AC} 0.004326069  0.8729642 1.0541114
+23 {busstop=Mayohall}                                                          => {Service_Class=Non-AC} 0.004083939  0.8694158 1.0498267
+24 {busstop=Kempegowda Bus Station}                                            => {Service_Class=Non-AC} 0.007748184  0.8602151 1.0387167
+25 {Route_lenght=20 KM}                                                        => {Service_Class=Non-AC} 0.005262308  0.8556430 1.0331960
+26 {busstop=Corporation}                                                       => {Service_Class=Non-AC} 0.004067797  0.8456376 1.0211143
+
+
+
+
+AFTER using trips
+Replacing trips NA's with its mean value
+> inspect(rules)
+  lhs          rhs                    support   confidence lift     
+1 {}        => {Service_Class=Non-AC} 0.8281517 0.8281517  1.0000000
+2 {Trips=4} => {Service_Class=Non-AC} 0.1290234 0.8110604  0.9793620
+3 {Trips=3} => {Service_Class=Non-AC} 0.1492817 0.8160240  0.9853557
+
+on decreasing support got 70 rules
+> inspect(rules)
+   lhs                                                                            rhs                        support confidence      lift
+1  {}                                                                          => {Service_Class=Non-AC} 0.828151735  0.8281517 1.0000000
+2  {Route_lenght=37.2 KM}                                                      => {Service_Class=Non-AC} 0.004148507  1.0000000 1.2075082
+3  {Route_lenght=30.5 KM}                                                      => {Service_Class=Non-AC} 0.004229217  1.0000000 1.2075082
+4  {busstop=Mayohall}                                                          => {Service_Class=Non-AC} 0.004083939  0.8694158 1.0498267
+5  {Route_lenght=18.8 KM}                                                      => {Service_Class=Non-AC} 0.004616626  1.0000000 1.2075082
+6  {Route_lenght=23.5 KM}                                                      => {Service_Class=Non-AC} 0.004164649  0.8805461 1.0632666
+7  {busstop=Corporation}                                                       => {Service_Class=Non-AC} 0.004067797  0.8456376 1.0211143
+8  {busstop=Maharani College,BESIDE SJP COLLEGE}                               => {Service_Class=Non-AC} 0.004116223  0.8279221 0.9997227
+9  {Trips=27}                                                                  => {Service_Class=Non-AC} 0.004810331  1.0000000 1.2075082
+10 {busstop=Richmond Circle}                                                   => {Service_Class=Non-AC} 0.004326069  0.8729642 1.0541114
+11 {Route_lenght=28.7 KM}                                                      => {Service_Class=Non-AC} 0.004164649  0.8295820 1.0017270
+12 {Route_lenght=15.5 KM}                                                      => {Service_Class=Non-AC} 0.004245359  0.8349206 1.0081735
+13 {Route_lenght=38.5 KM}                                                      => {Service_Class=Non-AC} 0.004229217  0.8291139 1.0011619
+14 {Trips=22}                                                                  => {Service_Class=Non-AC} 0.004632768  0.9228296 1.1143243
+15 {Route_lenght=19.2 KM}                                                      => {Service_Class=Non-AC} 0.004164649  0.7914110 0.9556353
+16 {Route_lenght=36 KM}                                                        => {Service_Class=Non-AC} 0.004987893  0.9747634 1.1770348
+17 {Route_lenght=24 KM}                                                        => {Service_Class=Non-AC} 0.004019370  0.7410714 0.8948498
+18 {busstop=Krishnarajendra Market,KR MARKET,OPPOSITE TO CHANDRA BHAVAN HOTEL} => {Service_Class=Non-AC} 0.004665052  0.8784195 1.0606987
+19 {Route_lenght=37.8 KM}                                                      => {Service_Class=Non-AC} 0.004245359  0.7781065 0.9395700
+20 {Route_lenght=29.2 KM}                                                      => {Service_Class=Non-AC} 0.005230024  1.0000000 1.2075082
+21 {Route_lenght=19 KM}                                                        => {Service_Class=Non-AC} 0.004455206  0.8214286 0.9918817
+22 {Route_lenght=13.8 KM}                                                      => {Service_Class=Non-AC} 0.004519774  0.8235294 0.9944185
+23 {busstop=Krishnarajendra Market}                                            => {Service_Class=Non-AC} 0.004568200  0.8179191 0.9876440
+24 {Route_lenght=28 KM}                                                        => {Service_Class=Non-AC} 0.004422922  0.7828571 0.9453064
+25 {Trips=24}                                                                  => {Service_Class=Non-AC} 0.005149314  0.9300292 1.1230178
+26 {Route_lenght=30 KM}                                                        => {Service_Class=Non-AC} 0.005020178  0.8911175 1.0760317
+27 {Route_lenght=18.9 KM}                                                      => {Service_Class=Non-AC} 0.004955609  0.8746439 1.0561396
+28 {Route_lenght=14.5 KM}                                                      => {Service_Class=Non-AC} 0.005633575  1.0000000 1.2075082
+29 {Trips=23}                                                                  => {Service_Class=Non-AC} 0.005407587  0.9490085 1.1459355
+30 {Route_lenght=20 KM}                                                        => {Service_Class=Non-AC} 0.005262308  0.8556430 1.0331960
+
+
+lhs=service_class=Ac and support=.004 no rule
+lhs=service_class=Non-AC
+ 
+
+
+
+
+
+
+
+
+
+
+
+New Rules
+
+
+#on discretizing route_Length with labels (short,mid,high)
+length<-as.numeric(assoc_data$Route_lenght)
+> assoc_data$Route_lenght<-cut(length,3,labels=c("Short","Mid","Long"))
+> datasub<-assoc_data[,c("route_no","busstop","Service_Class","Route_lenght")]
+> rules <- apriori(datasub, control = list(verbose=T), parameter = list(supp=0.004,conf=0.6))
+> inspect(rules)
+   lhs                                                                            rhs                        support confidence      lift
+1  {}                                                                          => {Service_Class=Non-AC} 0.828151735  0.8281517 1.0000000
+2  {busstop=Mayohall}                                                          => {Service_Class=Non-AC} 0.004083939  0.8694158 1.0498267
+3  {busstop=Corporation}                                                       => {Service_Class=Non-AC} 0.004067797  0.8456376 1.0211143
+4  {busstop=Maharani College,BESIDE SJP COLLEGE}                               => {Service_Class=Non-AC} 0.004116223  0.8279221 0.9997227
+5  {busstop=Richmond Circle}                                                   => {Service_Class=Non-AC} 0.004326069  0.8729642 1.0541114
+6  {busstop=Krishnarajendra Market,KR MARKET,OPPOSITE TO CHANDRA BHAVAN HOTEL} => {Service_Class=Non-AC} 0.004665052  0.8784195 1.0606987
+7  {busstop=Krishnarajendra Market}                                            => {Service_Class=Non-AC} 0.004568200  0.8179191 0.9876440
+8  {busstop=Town Hall}                                                         => {Service_Class=Non-AC} 0.006553672  0.8388430 1.0129098
+9  {busstop=Kempegowda Bus Station}                                            => {Route_lenght=Short}   0.005536723  0.6146953 1.7315559
+10 {busstop=Kempegowda Bus Station}                                            => {Service_Class=Non-AC} 0.007748184  0.8602151 1.0387167
+11 {Route_lenght=Long}                                                         => {Service_Class=Non-AC} 0.199564165  0.8361853 1.0097006
+12 {Route_lenght=Short}                                                        => {Service_Class=Non-AC} 0.294689266  0.8301200 1.0023767
+13 {Route_lenght=Mid}                                                          => {Service_Class=Non-AC} 0.333898305  0.8217137 0.9922261
+14 {busstop=Kempegowda Bus Station,                                                                                                      
+    Route_lenght=Short}                                                        => {Service_Class=Non-AC} 0.004778047  0.8629738 1.0420479
+15 {busstop=Kempegowda Bus Station,                                                                                                      
+    Service_Class=Non-AC}                                                      => {Route_lenght=Short}   0.004778047  0.6166667 1.7371089
+
+
+#on dropping service_class and discretizing trips in low avg and high frequency
+> length<-as.numeric(assoc_data$Route_length)
+> assoc_data$Route_length<-cut(length,3,labels=c("Short","Mid","Long"))
+> freq<-as.numeric(assoc_data$Trips)
+> assoc_data$Trips<-cut(freq,3,labels=c("Low","Avg","High"))
+> datasub<-assoc_data[,c("route_no","busstop","Route_length","Trips")]
+> rules <- apriori(datasub, control = list(verbose=T), parameter = list(supp=0.004,conf=0.6))
+> rules_desc<-sort(rules,by="lift")
+> inspect(rules_desc)
+  lhs                                                                            rhs                  support     confidence lift     
+15 {busstop=Kempegowda Bus Station,Trips=Low}                                  => {Route_length=Short} 0.005262308 0.6162571  1.7359552
+9  {busstop=Kempegowda Bus Station}                                            => {Route_length=Short} 0.005536723 0.6146953  1.7315559
+6  {busstop=Krishnarajendra Market,KR MARKET,OPPOSITE TO CHANDRA BHAVAN HOTEL} => {Trips=Low}          0.005278450 0.9939210  1.0327816
+5  {busstop=Maharani College,BESIDE SJP COLLEGE}                               => {Trips=Low}          0.004939467 0.9935065  1.0323509
+4  {busstop=Richmond Circle}                                                   => {Trips=Low}          0.004923325 0.9934853  1.0323289
+3  {busstop=Corporation}                                                       => {Trips=Low}          0.004778047 0.9932886  1.0321245
+8  {busstop=Town Hall}                                                         => {Trips=Low}          0.007748184 0.9917355  1.0305107
+7  {busstop=Krishnarajendra Market}                                            => {Trips=Low}          0.005536723 0.9913295  1.0300888
+2  {busstop=Mayohall}                                                          => {Trips=Low}          0.004616626 0.9828179  1.0212444
+11 {Route_length=Long}                                                         => {Trips=Low}          0.234237288 0.9814677  1.0198414
+13 {Route_length=Mid}                                                          => {Trips=Low}          0.394059726 0.9697692  1.0076855
+1  {}                                                                          => {Trips=Low}          0.962372881 0.9623729  1.0000000
+14 {busstop=Kempegowda Bus Station,Route_length=Short}                         => {Trips=Low}          0.005262308 0.9504373  0.9875978
+10 {busstop=Kempegowda Bus Station}                                            => {Trips=Low}          0.008539144 0.9480287  0.9850950
+12 {Route_length=Short}                                                        => {Trips=Low}          0.334075868 0.9410695  0.9778637
+
+
+#on applying association on stopcountforRoute having cols route_no,trips,time,length,stopcount   where time was taken from routes table..
+> trtime<-as.numeric(new_data$Time)
+> new_data$Time<-cut(trtime,3,labels=c("less","Avg","High"))
+> dist<-as.numeric(new_data$Route_length)
+> new_data$Route_length<-cut(dist,3,labels=c("Short","Mid","Long"))
+> is.numeric(new_data$BusStopCount)
+[1] TRUE
+> new_data$BusStopCount<-cut(new_data$BusStopCount,3,labels=c("low","avg","high"))
+> is.numeric(new_data$Trips)
+[1] TRUE
+> new_data$Trips<-cut(new_data$Trips,3,labels=c("less","avg","high"))
+> datasub<-new_data[,c("route_no","BusStopCount","Route_length","Trips","Time")]
+> rules <- apriori(datasub, control = list(verbose=T), parameter = list(supp=0.004,conf=0.6))
+> rules_desc<-sort(rules,by="lift")
+> inspect(rules_desc)
+  lhs                                                 rhs                  support     confidence lift     
+27  {BusStopCount=avg,Time=High}                     => {Route_length=Long}  0.004894763 1.0000000  5.1721519
+79  {BusStopCount=avg,Trips=less,Time=High}          => {Route_length=Long}  0.004894763 1.0000000  5.1721519
+6   {BusStopCount=avg}                               => {Route_length=Long}  0.016152717 0.8918919  4.6130003
+36  {BusStopCount=avg,Trips=less}                    => {Route_length=Long}  0.015663240 0.8888889  4.5974684
+34  {BusStopCount=avg,Time=Avg}                      => {Route_length=Long}  0.010279001 0.8400000  4.3446076
+84  {BusStopCount=avg,Trips=less,Time=Avg}           => {Route_length=Long}  0.009789525 0.8333333  4.3101266
+30  {Trips=less,Time=High}                           => {Route_length=Long}  0.012726383 0.7878788  4.0750288
+4   {Time=High}                                      => {Route_length=Long}  0.012726383 0.7647059  3.9551750
+81  {BusStopCount=low,Trips=less,Time=High}          => {Route_length=Long}  0.006363191 0.6842105  3.5388408
+31  {BusStopCount=low,Time=High}                     => {Route_length=Long}  0.006363191 0.6500000  3.3618987
+104 {BusStopCount=low,Route_length=Short,Trips=less} => {Time=less}          0.359275575 0.8137472  1.8070496
+66  {Route_length=Short,Trips=less}                  => {Time=less}          0.359275575 0.8128461  1.8050484
+68  {BusStopCount=low,Time=less}                     => {Route_length=Short} 0.374449339 0.8342421  1.7978445
+103 {BusStopCount=low,Trips=less,Time=less}          => {Route_length=Short} 0.359275575 0.8340909  1.7975187
+69  {BusStopCount=low,Route_length=Short}            => {Time=less}          0.374449339 0.8086681  1.7957705
+17  {Time=less}                                      => {Route_length=Short} 0.374938815 0.8326087  1.7943244
+18  {Route_length=Short}                             => {Time=less}          0.374938815 0.8080169  1.7943244
+65  {Trips=less,Time=less}                           => {Route_length=Short} 0.359275575 0.8321995  1.7934427
+100 {BusStopCount=low,Trips=less,Time=Avg}           => {Route_length=Mid}   0.305433186 0.6064140  1.7698626
+61  {BusStopCount=low,Time=Avg}                      => {Route_length=Mid}   0.314243759 0.6033835  1.7610177
+58  {Route_length=Mid,Trips=less}                    => {Time=Avg}           0.307391092 0.9235294  1.7325717
+99  {BusStopCount=low,Route_length=Mid,Trips=less}   => {Time=Avg}           0.305433186 0.9230769  1.7317228
+14  {Route_length=Mid}                               => {Time=Avg}           0.316201664 0.9228571  1.7313105
+60  {BusStopCount=low,Route_length=Mid}              => {Time=Avg}           0.314243759 0.9224138  1.7304788
+40  {Route_length=Mid,Trips=avg}                     => {Time=Avg}           0.008321096 0.8947368  1.6785559
+86  {BusStopCount=low,Route_length=Mid,Trips=avg}    => {Time=Avg}           0.008321096 0.8947368  1.6785559
+42  {Trips=avg,Time=less}                            => {Route_length=Short} 0.006852668 0.7000000  1.5085443
+88  {BusStopCount=low,Trips=avg,Time=less}           => {Route_length=Short} 0.006852668 0.7000000  1.5085443
+94  {BusStopCount=low,Route_length=Long,Trips=less}  => {Time=Avg}           0.116005874 0.6771429  1.2703424
+7   {BusStopCount=avg}                               => {Time=Avg}           0.012236907 0.6756757  1.2675899
+52  {BusStopCount=low,Route_length=Long}             => {Time=Avg}           0.117963779 0.6713092  1.2593982
+50  {Route_length=Long,Trips=less}                   => {Time=Avg}           0.125795399 0.6675325  1.2523130
+38  {BusStopCount=avg,Trips=less}                    => {Time=Avg}           0.011747430 0.6666667  1.2506887
+11  {Route_length=Long}                              => {Time=Avg}           0.128242780 0.6632911  1.2443561
+33  {BusStopCount=avg,Route_length=Long}             => {Time=Avg}           0.010279001 0.6363636  1.1938392
+83  {BusStopCount=avg,Route_length=Long,Trips=less}  => {Time=Avg}           0.009789525 0.6250000  1.1725207
+9   {Trips=avg}                                      => {Time=Avg}           0.016642193 0.6181818  1.1597295
+46  {BusStopCount=low,Trips=avg}                     => {Time=Avg}           0.016152717 0.6111111  1.1464646
+28  {BusStopCount=avg,Time=High}                     => {Trips=less}         0.004894763 1.0000000  1.0381098
+29  {Route_length=Long,Time=High}                    => {Trips=less}         0.012726383 1.0000000  1.0381098
+78  {BusStopCount=avg,Route_length=Long,Time=High}   => {Trips=less}         0.004894763 1.0000000  1.0381098
+80  {BusStopCount=low,Route_length=Long,Time=High}   => {Trips=less}         0.006363191 1.0000000  1.0381098
+3   {Trips=high}                                     => {BusStopCount=low}   0.004405286 1.0000000  1.0209895
+41  {Route_length=Mid,Trips=avg}                     => {BusStopCount=low}   0.009300049 1.0000000  1.0209895
+43  {Trips=avg,Time=less}                            => {BusStopCount=low}   0.009789525 1.0000000  1.0209895
+44  {Route_length=Short,Trips=avg}                   => {BusStopCount=low}   0.012726383 1.0000000  1.0209895
+56  {Route_length=Mid,Time=less}                     => {BusStopCount=low}   0.023005384 1.0000000  1.0209895
+73  {Route_length=Short,Time=Avg}                    => {BusStopCount=low}   0.088595203 1.0000000  1.0209895
+85  {Route_length=Mid,Trips=avg,Time=Avg}            => {BusStopCount=low}   0.008321096 1.0000000  1.0209895
+87  {Route_length=Short,Trips=avg,Time=less}         => {BusStopCount=low}   0.006852668 1.0000000  1.0209895
+89  {Route_length=Short,Trips=avg,Time=Avg}          => {BusStopCount=low}   0.005873715 1.0000000  1.0209895
+95  {Route_length=Mid,Trips=less,Time=less}          => {BusStopCount=low}   0.022515908 1.0000000  1.0209895
+101 {Route_length=Short,Trips=less,Time=less}        => {BusStopCount=low}   0.359275575 1.0000000  1.0209895
+105 {Route_length=Short,Trips=less,Time=Avg}         => {BusStopCount=low}   0.082232012 1.0000000  1.0209895
+93  {BusStopCount=low,Route_length=Long,Time=Avg}    => {Trips=less}         0.116005874 0.9834025  1.0208797
+74  {Route_length=Short,Trips=less}                  => {BusStopCount=low}   0.441507587 0.9988926  1.0198588
+67  {Route_length=Short,Time=less}                   => {BusStopCount=low}   0.374449339 0.9986945  1.0196566
+22  {Route_length=Short}                             => {BusStopCount=low}   0.463044542 0.9978903  1.0188355
+70  {Trips=less,Time=less}                           => {BusStopCount=low}   0.430739109 0.9977324  1.0186743
+49  {Route_length=Long,Time=Avg}                     => {Trips=less}         0.125795399 0.9809160  1.0182985
+20  {Time=less}                                      => {BusStopCount=low}   0.448849731 0.9967391  1.0176602
+55  {Route_length=Mid,Time=less}                     => {Trips=less}         0.022515908 0.9787234  1.0160223
+96  {BusStopCount=low,Route_length=Mid,Time=less}    => {Trips=less}         0.022515908 0.9787234  1.0160223
+16  {Route_length=Mid}                               => {BusStopCount=low}   0.340675477 0.9942857  1.0151553
+62  {Route_length=Mid,Trips=less}                    => {BusStopCount=low}   0.330885952 0.9941176  1.0149837
+59  {Route_length=Mid,Time=Avg}                      => {BusStopCount=low}   0.314243759 0.9938080  1.0146676
+97  {Route_length=Mid,Trips=less,Time=Avg}           => {BusStopCount=low}   0.305433186 0.9936306  1.0144864
+54  {BusStopCount=low,Route_length=Long}             => {Trips=less}         0.171316691 0.9749304  1.0120847
+12  {Route_length=Long}                              => {Trips=less}         0.188448360 0.9746835  1.0118285
+8   {BusStopCount=avg}                               => {Trips=less}         0.017621145 0.9729730  1.0100527
+57  {Route_length=Mid,Time=Avg}                      => {Trips=less}         0.307391092 0.9721362  1.0091841
+98  {BusStopCount=low,Route_length=Mid,Time=Avg}     => {Trips=less}         0.305433186 0.9719626  1.0090039
+15  {Route_length=Mid}                               => {Trips=less}         0.332843857 0.9714286  1.0084495
+63  {BusStopCount=low,Route_length=Mid}              => {Trips=less}         0.330885952 0.9712644  1.0082790
+5   {Time=High}                                      => {Trips=less}         0.016152717 0.9705882  1.0075771
+35  {BusStopCount=avg,Route_length=Long}             => {Trips=less}         0.015663240 0.9696970  1.0066519
+77  {BusStopCount=low,Time=Avg}                      => {Trips=less}         0.503671072 0.9671053  1.0039614
+23  {Time=Avg}                                       => {Trips=less}         0.515418502 0.9669421  1.0037921
+10  {Trips=avg}                                      => {BusStopCount=low}   0.026431718 0.9818182  1.0024261
+48  {Route_length=Long,Time=less}                    => {BusStopCount=low}   0.051395007 0.9813084  1.0019056
+90  {Route_length=Long,Trips=less,Time=less}         => {BusStopCount=low}   0.048947626 0.9803922  1.0009701
+25  {Trips=less}                                     => {BusStopCount=low}   0.943710230 0.9796748  1.0002377
+26  {BusStopCount=low}                               => {Trips=less}         0.943710230 0.9635182  1.0002377
+1   {}                                               => {Trips=less}         0.963289280 0.9632893  1.0000000
+2   {}                                               => {BusStopCount=low}   0.979441997 0.9794420  1.0000000
+76  {Trips=less,Time=Avg}                            => {BusStopCount=low}   0.503671072 0.9772080  0.9977191
+24  {Time=Avg}                                       => {BusStopCount=low}   0.520802741 0.9770432  0.9975508
+37  {BusStopCount=avg,Time=Avg}                      => {Trips=less}         0.011747430 0.9600000  0.9965854
+71  {BusStopCount=low,Time=less}                     => {Trips=less}         0.430739109 0.9596510  0.9962231
+102 {BusStopCount=low,Route_length=Short,Time=less}  => {Trips=less}         0.359275575 0.9594771  0.9960426
+19  {Time=less}                                      => {Trips=less}         0.431718062 0.9586957  0.9952313
+64  {Route_length=Short,Time=less}                   => {Trips=less}         0.359275575 0.9582245  0.9947422
+45  {Trips=avg,Time=Avg}                             => {BusStopCount=low}   0.016152717 0.9705882  0.9909604
+75  {BusStopCount=low,Route_length=Short}            => {Trips=less}         0.441507587 0.9534884  0.9898256
+47  {Route_length=Long,Time=less}                    => {Trips=less}         0.049926579 0.9532710  0.9896000
+21  {Route_length=Short}                             => {Trips=less}         0.441997063 0.9525316  0.9888324
+82  {BusStopCount=avg,Route_length=Long,Time=Avg}    => {Trips=less}         0.009789525 0.9523810  0.9886760
+91  {BusStopCount=low,Route_length=Long,Time=less}   => {Trips=less}         0.048947626 0.9523810  0.9886760
+32  {BusStopCount=low,Time=High}                     => {Trips=less}         0.009300049 0.9500000  0.9862043
+72  {Route_length=Short,Time=Avg}                    => {Trips=less}         0.082232012 0.9281768  0.9635494
+106 {BusStopCount=low,Route_length=Short,Time=Avg}   => {Trips=less}         0.082232012 0.9281768  0.9635494
+92  {Route_length=Long,Trips=less,Time=Avg}          => {BusStopCount=low}   0.116005874 0.9221790  0.9415351
+51  {Route_length=Long,Time=Avg}                     => {BusStopCount=low}   0.117963779 0.9198473  0.9391545
+53  {Route_length=Long,Trips=less}                   => {BusStopCount=low}   0.171316691 0.9090909  0.9281723
+13 <p> {Route_length=Long}                              => {BusStopCount=low}   0.175721977 0.9088608  0.9279373</p>
+39  {Route_length=Long,Trips=avg}                    => {BusStopCount=low}   0.004405286 0.9000000  0.9188906
+> 
+
+
+
+
+adding the intermediate stops arrivaltime
+> time_data<-read.csv("~/Thesis/CSV/BusRoutes.csv")
+> datasub<-time_data[,c("route_no","busstop","hr")]
+> rules <- apriori(datasub, control = list(verbose=T), parameter = list(supp=0.004,conf=0.6))
+##got 0 rules...
+> datasub<-time_data[,c("busstop","hr")]
+> rules <- apriori(datasub, control = list(verbose=T), parameter = list(supp=0.004,conf=0.6))
+## again got 0 rules..
+> time_data$hr<-cut(time_data$Trips,5,labels=c("less1","less2","avg","high1","high2"))
+> datasub<-time_data[,c("busstop","hr")]
+> rules <- apriori(datasub, control = list(verbose=T), parameter = list(supp=0.004,conf=0.6))
+> inspect(rules)
+  lhs                                                                            rhs        support     confidence lift     
+1 {}                                                                          => {hr=less1} 0.925681833 0.9256818  1.0000000
+2 {busstop=Mayohall}                                                          => {hr=less1} 0.004540129 0.9587629  1.0357370
+3 {busstop=Corporation}                                                       => {hr=less1} 0.004654039 0.9597315  1.0367834
+4 {busstop=Richmond Circle}                                                   => {hr=less1} 0.004881859 0.9771987  1.0556529
+5 {busstop=Maharani College,BESIDE SJP COLLEGE}                               => {hr=less1} 0.004833040 0.9642857  1.0417032
+6 {busstop=Krishnarajendra Market,KR MARKET,OPPOSITE TO CHANDRA BHAVAN HOTEL} => {hr=less1} 0.005272408 0.9848024  1.0638671
+7 {busstop=Krishnarajendra Market}                                            => {hr=less1} 0.005353772 0.9508671  1.0272072
+8 {busstop=Town Hall}                                                         => {hr=less1} 0.007583154 0.9628099  1.0401089
+9 {busstop=Kempegowda Bus Station}                                            => {hr=less1} 0.007892339 0.8691756  0.9389572
+
+> time_data$hr<-cut(time_data$Trips,5,labels=c("less1","less2","avg","high1","high2"))
+> time_data$hr<-cut(time_data$Trips,5)       ## without labels..
+> datasub<-time_data[,c("busstop","hr")]
+> rules <- apriori(datasub, control = list(verbose=T), parameter = list(supp=0.004,conf=0.6))
+> inspect(rules)
+  lhs                                                                            rhs                   support confidence      lift
+1 {}                                                                          => {hr=(0.872,26.6]} 0.925681833  0.9256818 1.0000000
+2 {busstop=Mayohall}                                                          => {hr=(0.872,26.6]} 0.004540129  0.9587629 1.0357370
+3 {busstop=Corporation}                                                       => {hr=(0.872,26.6]} 0.004654039  0.9597315 1.0367834
+4 {busstop=Richmond Circle}                                                   => {hr=(0.872,26.6]} 0.004881859  0.9771987 1.0556529
+5 {busstop=Maharani College,BESIDE SJP COLLEGE}                               => {hr=(0.872,26.6]} 0.004833040  0.9642857 1.0417032
+6 {busstop=Krishnarajendra Market,KR MARKET,OPPOSITE TO CHANDRA BHAVAN HOTEL} => {hr=(0.872,26.6]} 0.005272408  0.9848024 1.0638671
+7 {busstop=Krishnarajendra Market}                                            => {hr=(0.872,26.6]} 0.005353772  0.9508671 1.0272072
+8 {busstop=Town Hall}                                                         => {hr=(0.872,26.6]} 0.007583154  0.9628099 1.0401089
+9 {busstop=Kempegowda Bus Station}                                            => {hr=(0.872,26.6]} 0.007892339  0.8691756 0.9389572
+
+
+> time_data<-read.csv("~/Thesis/CSV/BusRoutes.csv")
+> View(time_data)
+> tr<-discretize(time_data$hr, categories=3)
+Error in Summary.factor(c(928L, 931L, 935L, 938L, 941L, 945L, 948L, 951L,  : 
+  ‘min’ not meaningful for factors
+> is.numeric(time_data$hr)
+[1] FALSE
+> tr<-as.numeric(time_data$hr)
+> td<-discretize(tr,method="interval",categories=3)
+> View(td)
+> time_data$hr<-discretize(tr,method="interval",categories=3)
+> datasub<-time_data[,c("busstop","hr")]
+> rules <- apriori(datasub, control = list(verbose=T), parameter = list(supp=0.004,conf=0.6))
+> inspect(rules)
+  lhs                                                                            rhs              support     confidence lift    
+1 {}                                                                          => {hr=[ 721,1081]} 0.904706112 0.9047061  1.000000
+2 {busstop=Mayohall}                                                          => {hr=[ 721,1081]} 0.004377400 0.9243986  1.021767
+3 {busstop=Corporation}                                                       => {hr=[ 721,1081]} 0.004426219 0.9127517  1.008893
+4 {busstop=Richmond Circle}                                                   => {hr=[ 721,1081]} 0.004686585 0.9381107  1.036923
+5 {busstop=Maharani College,BESIDE SJP COLLEGE}                               => {hr=[ 721,1081]} 0.004588947 0.9155844  1.012024
+6 {busstop=Krishnarajendra Market,KR MARKET,OPPOSITE TO CHANDRA BHAVAN HOTEL} => {hr=[ 721,1081]} 0.004914405 0.9179331  1.014620
+7 {busstop=Krishnarajendra Market}                                            => {hr=[ 721,1081]} 0.005370045 0.9537572  1.054218
+8 {busstop=Town Hall}                                                         => {hr=[ 721,1081]} 0.007371607 0.9359504  1.034535
+9 {busstop=Kempegowda Bus Station}                                            => {hr=[ 721,1081]} 0.008396798 0.9247312  1.022134
+
+> time_data<-read.csv("~/Thesis/CSV/BusRoutes.csv")
+> tr<-as.numeric(time_data$hr)
+> time_data$hr<-discretize(tr,method="interval",categories=5,labels=c("em","m","a","e","n"))
+> datasub<-time_data[,c("busstop","hr")]
+> rules <- apriori(datasub, control = list(verbose=T), parameter = list(supp=0.004,conf=0.6))
+> inspect(rules)
+  lhs                    rhs    support     confidence lift    
+1 {}                  => {hr=n} 0.665608931 0.6656089  1.000000
+2 {busstop=Town Hall} => {hr=n} 0.005353772 0.6797521  1.021248
+
+
+
+
+SELECT t1.busstop,t2.busstop,t1.route_no,t1.trips from BusRoutes t1,BusRoutes t2 where t1.busstop<>t2.busstop and t1.route_no=t2.route_no
